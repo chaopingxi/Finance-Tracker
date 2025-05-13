@@ -1,0 +1,860 @@
+/* Style untuk Card dengan Kontras yang Ditingkatkan */
+.enhanced-card {
+  padding: 18px;
+  border-radius: 12px;
+  height: 100%;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+  background: linear-gradient(145deg, #1a222e, #0d141e);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.enhanced-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.enhanced-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.icon-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.bg-primary-light {
+  background-color: rgba(13, 110, 253, 0.2);
+}
+
+.bg-success-light {
+  background-color: rgba(25, 135, 84, 0.2);
+}
+
+.bg-danger-light {
+  background-color: rgba(220, 53, 69, 0.2);
+}
+
+.enhanced-amount {
+  font-size: 1.75rem;
+  margin: 10px 0 15px 0;
+  text-shadow: 0 0 10px rgba(255,255,255,0.1);
+}
+
+.text-primary-bright {
+  color: #60a5fa !important;
+}
+
+.text-success-bright {
+  color: #34d399 !important;
+}
+
+.text-danger-bright {
+  color: #f87171 !important;
+}
+
+.bg-success-bright {
+  background-color: #10b981 !important;
+}
+
+.bg-danger-bright {
+  background-color: #ef4444 !important; 
+}
+
+.text-bright-muted {
+  color: #d1d5db !important;
+}
+
+.enhanced-details {
+  margin-top: auto;
+  font-size: 0.9rem;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Style untuk box-dark agar sesuai dengan enhanced-card */
+.box-dark {
+  padding: 18px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+  background: linear-gradient(145deg, #1a222e, #0d141e);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.box-dark:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+/* Style untuk input dan select di dalam box-dark */
+.box-dark input, 
+.box-dark select {
+  background-color: #262f42;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
+  color: #ffffff;
+  padding: 10px 12px;
+  width: 100%;
+}
+
+.box-dark input:focus, 
+.box-dark select:focus {
+  outline: none;
+  border-color: rgba(96, 165, 250, 0.5);
+  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.25);
+}
+
+/* Style untuk icon pada judul box */
+.box-dark .fs-5 {
+  display: flex;
+  align-items: center;
+  color: #ffffff;
+}
+
+/* Style untuk button dalam box-dark */
+.box-dark .btn-primary {
+  background-color: #60a5fa;
+  border-color: #60a5fa;
+  color: #ffffff;
+}
+
+.box-dark .btn-success {
+  background-color: #34d399;
+  border-color: #34d399;
+  color: #ffffff;
+}
+
+/* Memastikan badge terlihat jelas */
+.badge {
+  font-weight: 600;
+  padding: 0.4em 0.65em;
+}
+
+/* Progress bar yang lebih tebal dan jelas */
+.progress {
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+/* Light mode support untuk komponen baru */
+body.light-mode .enhanced-card {
+  background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+  border: 1px solid rgba(0,0,0,0.1);
+  color: #333;
+}
+
+body.light-mode .box-dark {
+  background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+  border: 1px solid rgba(0,0,0,0.1);
+  color: #333;
+}
+
+body.light-mode .box-dark input,
+body.light-mode .box-dark select {
+  background-color: #ffffff;
+  border: 1px solid rgba(0,0,0,0.1);
+  color: #333;
+}
+
+body.light-mode .enhanced-header .text-white,
+body.light-mode .box-dark .fs-5 {
+  color: #333 !important;
+}
+
+body.light-mode .text-bright-muted {
+  color: #6c757d !important;
+}
+
+/* Memperbaiki error pada style yang terdeteksi validator */
+.box-dark input::placeholder,
+.box-dark textarea::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+body.light-mode .box-dark input::placeholder,
+body.light-mode .box-dark textarea::placeholder {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+/* Styling untuk Daftar Kategori */
+.folder-icon {
+  color: #fbbf24;
+  margin-right: 8px;
+}
+
+/* Header Daftar Kategori */
+.category-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+/* Container untuk Daftar Kategori */
+.box-light {
+  padding: 18px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+  background: linear-gradient(145deg, #1a222e, #0d141e);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.box-light:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+/* Item kategori di dalam list */
+.list-group-item {
+  background-color: #262f42;
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #ffffff;
+  transition: all 0.2s ease;
+  margin-bottom: 4px;
+}
+
+.list-group-item:hover {
+  background-color: #323d52;
+}
+
+/* Badge kategori */
+.list-group-item .badge {
+  background-color: #4b5563;
+  color: #ffffff;
+  font-size: 0.75rem;
+  padding: 0.3em 0.6em;
+}
+
+/* Tombol Edit dan Hapus */
+.btn-warning {
+  background-color: #f59e0b;
+  border-color: #f59e0b;
+  color: #ffffff;
+}
+
+.btn-danger {
+  background-color: #ef4444;
+  border-color: #ef4444;
+  color: #ffffff;
+}
+
+.btn-warning:hover {
+  background-color: #d97706;
+  border-color: #d97706;
+}
+
+.btn-danger:hover {
+  background-color: #dc2626;
+  border-color: #dc2626;
+}
+
+/* Light mode support */
+body.light-mode .box-light {
+  background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+  border: 1px solid rgba(0,0,0,0.1);
+  color: #333;
+}
+
+body.light-mode .list-group-item {
+  background-color: #ffffff;
+  border: 1px solid rgba(0,0,0,0.1);
+  color: #333;
+}
+
+body.light-mode .list-group-item:hover {
+  background-color: #f8f9fa;
+}
+
+body.light-mode .category-header {
+  color: #333;
+}
+
+/* Form pencarian dan export */
+.input-group input {
+  background-color: #262f42;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px 0 0 6px;
+  color: #ffffff;
+  padding: 10px 12px;
+}
+
+.input-group .btn-outline-secondary {
+  border-color: rgba(255,255,255,0.1);
+  color: #ffffff;
+  border-left: none;
+  border-radius: 0 6px 6px 0;
+  background-color: #323d52;
+}
+
+.input-group .btn-outline-secondary:hover {
+  background-color: #3e4a63;
+}
+
+.btn-outline-success {
+  border-color: #34d399;
+  color: #34d399;
+}
+
+.btn-outline-success:hover {
+  background-color: #34d399;
+  color: #121212;
+}
+
+/* Light mode untuk pencarian dan export */
+body.light-mode .input-group input {
+  background-color: #ffffff;
+  border: 1px solid rgba(0,0,0,0.1);
+  color: #333;
+}
+
+body.light-mode .input-group .btn-outline-secondary {
+  border-color: rgba(0,0,0,0.1);
+  color: #333;
+  background-color: #f0f0f0;
+}
+
+body.light-mode .input-group .btn-outline-secondary:hover {
+  background-color: #e0e0e0;
+}
+
+body.light-mode .btn-outline-success {
+  border-color: #10b981;
+  color: #10b981;
+}
+
+body.light-mode .btn-outline-success:hover {
+  background-color: #10b981;
+  color: #ffffff;
+}
+
+/* SweetAlert2 Custom Styling */
+.styled-swal-popup {
+  font-family: 'Segoe UI', sans-serif;
+  border-radius: 12px !important;
+  padding: 20px !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
+}
+
+.styled-swal-title {
+  font-weight: 600 !important;
+  font-size: 1.5rem !important;
+}
+
+.styled-swal-content {
+  font-size: 1rem !important;
+}
+
+/* Tombol SweetAlert2 yang diperbarui */
+.swal2-confirm.btn-danger {
+  background-color: #ef4444 !important;
+  border-color: #ef4444 !important;
+  color: white !important;
+  padding: 10px 24px !important;
+  font-weight: 600 !important;
+  transition: all 0.2s ease !important;
+}
+
+.swal2-cancel.btn-secondary {
+  background-color: #4b5563 !important;
+  border-color: #4b5563 !important;
+  color: white !important;
+  padding: 10px 24px !important;
+  font-weight: 600 !important;
+  transition: all 0.2s ease !important;
+}
+
+.swal2-confirm.btn-danger:hover {
+  background-color: #dc2626 !important;
+  border-color: #dc2626 !important;
+  transform: translateY(-2px) !important;
+}
+
+.swal2-cancel.btn-secondary:hover {
+  background-color: #374151 !important;
+  border-color: #374151 !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Icon styling */
+.swal2-icon.swal2-warning {
+  border-color: #f59e0b !important;
+  color: #f59e0b !important;
+}
+
+/* Light mode adjustments */
+body.light-mode .styled-swal-popup {
+  background: #ffffff !important;
+  color: #333333 !important;
+}
+
+/* Dark mode adjustments */
+body.dark-mode .styled-swal-popup {
+  background: #1a222e !important;
+  color: #ffffff !important;
+}
+
+body.dark-mode .swal2-html-container {
+  color: #d1d5db !important;
+}
+
+/* Style untuk tabel daftar kategori agar mengikuti tema */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  background-color: #1a222e;
+  color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+table thead th {
+  background-color: #262f42;
+  color: #ffffff;
+  padding: 12px 15px;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 2px solid rgba(255,255,255,0.1);
+}
+
+table tbody td {
+  padding: 12px 15px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  transition: background-color 0.2s ease;
+}
+
+table tbody tr:hover {
+  background-color: #262f42;
+}
+
+/* Light mode untuk tabel */
+body.light-mode table {
+  background-color: #ffffff;
+  color: #333333;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+body.light-mode table thead th {
+  background-color: #f0f0f0;
+  color: #333333;
+  border-bottom: 2px solid rgba(0,0,0,0.1);
+}
+
+body.light-mode table tbody td {
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+body.light-mode table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* Khusus untuk kolom kategori */
+td.kategori-kolom {
+  font-weight: 500;
+}
+
+/* Untuk tombol di dalam tabel */
+table .btn {
+  padding: 6px 12px;
+  font-size: 0.875rem;
+  border-radius: 4px;
+  margin: 0 4px;
+}
+
+/* Badge tipe transaksi */
+.tipe-badge {
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.tipe-pemasukan {
+  background-color: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+}
+
+.tipe-pengeluaran {
+  background-color: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+}
+
+/* Light mode untuk badge tipe */
+body.light-mode .tipe-pemasukan {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+}
+
+body.light-mode .tipe-pengeluaran {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+/* Fix untuk duplikasi class dan style yang redundant */
+.text-white {
+  color: #ffffff !important;
+}
+
+body.light-mode .text-white {
+  color: #333333 !important;
+}
+
+/* Table theming for dark/light mode */
+.table-themed {
+  --bs-table-bg: transparent;
+  --bs-table-color: inherit;
+}
+
+/* Dark mode table styling */
+body.dark-mode .table-themed {
+  color: #e2e8f0;
+  border-color: #2d3748;
+}
+
+body.dark-mode .table-themed thead th {
+  border-bottom-color: #2d3748;
+  background-color: #1e293b;
+  color: #f8fafc;
+}
+
+body.dark-mode .table-themed td {
+  border-color: #2d3748;
+}
+
+body.dark-mode .table-themed tbody tr:hover {
+  background-color: rgba(45, 55, 72, 0.5);
+}
+
+/* Light mode table styling */
+body:not(.dark-mode) .table-themed {
+  color: #334155;
+  border-color: #e2e8f0;
+}
+
+body:not(.dark-mode) .table-themed thead th {
+  border-bottom-color: #cbd5e1;
+  background-color: #f1f5f9;
+  color: #334155;
+}
+
+body:not(.dark-mode) .table-themed td {
+  border-color: #e2e8f0;
+}
+
+body:not(.dark-mode) .table-themed tbody tr:hover {
+  background-color: rgba(226, 232, 240, 0.5);
+}
+
+/* Perbaikan untuk input dan form control dalam dark mode */
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea,
+body.dark-mode .form-control {
+    background-color: #1e2738 !important;
+    color: #e2e8f0 !important;
+    border: 1px solid #4b5563 !important;
+    border-radius: 6px;
+}
+
+/* Fokus pada input */
+body.dark-mode input:focus,
+body.dark-mode select:focus,
+body.dark-mode textarea:focus,
+body.dark-mode .form-control:focus {
+    border-color: #60a5fa !important;
+    box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.25) !important;
+    outline: none;
+}
+
+/* Placeholder */
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder {
+    color: #9ca3af !important;
+}
+
+/* Dropdown options */
+body.dark-mode option {
+    background-color: #1e2738;
+    color: #e2e8f0;
+}
+
+/* Perbaikan input light mode */
+body.light-mode input,
+body.light-mode select,
+body.light-mode textarea,
+body.light-mode .form-control {
+    background-color: #ffffff !important;
+    color: #333333 !important;
+    border: 1px solid #ced4da !important;
+    border-radius: 6px;
+}
+
+body.light-mode input:focus,
+body.light-mode select:focus,
+body.light-mode textarea:focus,
+body.light-mode .form-control:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25) !important;
+    outline: none;
+}
+
+body.light-mode input::placeholder,
+body.light-mode textarea::placeholder {
+    color: #6c757d !important;
+}
+
+body.light-mode option {
+    background-color: #ffffff;
+    color: #333333;
+}
+
+/* Memperbaiki transisi untuk semua elemen form */
+input, select, textarea, .form-control {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Memastikan box-dark dan elemen lain menjadi lebih solid */
+.box-dark {
+    background-color: rgba(30, 30, 30, 0.9) !important;
+    backdrop-filter: blur(10px);
+}
+
+body.light-mode .box-dark {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(10px);
+}
+
+/* Memastikan teks selalu terlihat jelas */
+body.dark-mode .box-dark,
+body.dark-mode .summary-card,
+body.dark-mode .category-header,
+body.dark-mode .table-themed {
+    color: #e2e8f0 !important;
+}
+
+body.light-mode .box-dark,
+body.light-mode .summary-card,
+body.light-mode .category-header,
+body.light-mode .table-themed {
+    color: #334155 !important;
+}
+
+/* Styling untuk date input */
+input[type="date"] {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 6px;
+}
+
+/* Styling untuk tombol tambah transaksi */
+.btn-tambah-transaksi {
+    background-color: #10b981;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-tambah-transaksi:hover {
+    background-color: #059669;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Styling untuk dashboard menu items */
+.sidebar-menu .nav-link {
+    color: #d1d5db;
+    padding: 10px 15px;
+    border-radius: 6px;
+    margin-bottom: 5px;
+    transition: all 0.3s ease;
+}
+
+.sidebar-menu .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+}
+
+.sidebar-menu .nav-link.active {
+    background-color: #60a5fa;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+/* Light mode untuk menu sidebar */
+body.light-mode .sidebar-menu .nav-link {
+    color: #4b5563;
+}
+
+body.light-mode .sidebar-menu .nav-link:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: #111827;
+}
+
+body.light-mode .sidebar-menu .nav-link.active {
+    background-color: #3b82f6;
+    color: #ffffff;
+}
+
+/* Modal styling */
+.modal-content {
+    border-radius: 12px;
+    border: none;
+    background-color: #1a222e;
+    color: #e2e8f0;
+}
+
+.modal-header {
+    border-bottom: 1px solid #2d3748;
+}
+
+.modal-footer {
+    border-top: 1px solid #2d3748;
+}
+
+/* Light mode modal */
+body.light-mode .modal-content {
+    background-color: #ffffff;
+    color: #333333;
+}
+
+body.light-mode .modal-header {
+    border-bottom: 1px solid #e2e8f0;
+}
+
+body.light-mode .modal-footer {
+    border-top: 1px solid #e2e8f0;
+}
+
+/* Styling untuk chart dan grafik */
+.chart-container {
+    background-color: rgba(30, 30, 30, 0.5);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+body.light-mode .chart-container {
+    background-color: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+
+/* Styling untuk pagination */
+.pagination .page-item .page-link {
+    color: #60a5fa;
+    background-color: #1a222e;
+    border-color: #2d3748;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #60a5fa;
+    border-color: #60a5fa;
+    color: #ffffff;
+}
+
+.pagination .page-item .page-link:hover {
+    background-color: #2d3748;
+    color: #ffffff;
+}
+
+body.light-mode .pagination .page-item .page-link {
+    color: #3b82f6;
+    background-color: #ffffff;
+    border-color: #e2e8f0;
+}
+
+body.light-mode .pagination .page-item.active .page-link {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+    color: #ffffff;
+}
+
+body.light-mode .pagination .page-item .page-link:hover {
+    background-color: #f1f5f9;
+    color: #1e40af;
+}
+
+/* Fix for responsive tables */
+.table-responsive {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Ensure navbar text is visible in both light and dark modes */
+body.dark-mode .navbar-nav .nav-link,
+body.dark-mode .navbar-brand {
+    color: #f8f9fa !important; /* Light text color for dark mode */
+}
+
+body.light-mode .navbar-nav .nav-link,
+body.light-mode .navbar-brand {
+    color: #212529 !important; /* Dark text color for light mode */
+}
+
+/* Add hover effects for better UX */
+body.dark-mode .navbar-nav .nav-link:hover,
+body.dark-mode .navbar-brand:hover {
+    color: #ffffff !important; /* Brighter white on hover for dark mode */
+}
+
+body.light-mode .navbar-nav .nav-link:hover,
+body.light-mode .navbar-brand:hover {
+    color: #000000 !important; /* Darker black on hover for light mode */
+}
+
+/* Ensure the active link is highlighted */
+body.dark-mode .navbar-nav .nav-link.active {
+    color: #7acbf1 !important; /* Highlight color for dark mode */
+}
+
+body.light-mode .navbar-nav .nav-link.active {
+    color: #0d6efd !important; /* Highlight color for light mode */
+}
+
+/* Add a subtle background to navbar in dark mode for better contrast */
+body.dark-mode .navbar {
+    background-color: rgba(18, 18, 18, 0.8) !important;
+}
+
+body {
+  opacity: 0;
+  transition: opacity 0.3s ease-in;
+}
+body.loaded {
+  opacity: 1;
+}
+
+.badge.bg-success {
+  background-color: #10b981 !important;
+  color: #fff;
+}
+
+.badge.bg-warning {
+  background-color: #facc15 !important;
+  color: #000;
+}

@@ -1,0 +1,26 @@
+<h2>Pilih Paket Langganan</h2>
+
+<div class="card">
+    <h3>Premium</h3>
+    <p>Rp5.000 / 30 hari</p>
+    <ul>
+        <li>Ekspor CSV</li>
+        <li>Kategori kustom</li>
+    </ul>
+    <form method="POST" action="{{ url_for('upgrade', level='premium') }}">
+        <button type="submit">Bayar & Upgrade</button>
+    </form>
+</div>
+
+<div class="card">
+    <h3>Ultra Premium</h3>
+    <p>Rp8.000 / 30 hari</p>
+    <ul>
+        <li>Semua fitur Premium</li>
+        <li>Grafik keuangan</li>
+        <li>Rekomendasi AI</li>
+    </ul>
+    <form method="POST" action="{{ url_for('upgrade', level='ultra_premium') }}">
+        <button type="submit">Bayar & Upgrade</button>
+    </form>
+</div>

@@ -1,0 +1,102 @@
+{% extends "layout.html" %}
+
+{% block title %}Statistik{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Statistik Pengeluaran & Pemasukan</h2>
+
+    <div class="row">
+        <!-- Pie Chart -->
+        <div class="col-md-6 mb-4">
+            <h4>Statistik Kategori (Pie Chart)</h4>
+            <canvas id="pieChart" width="400" height="400"></canvas>
+        </div>
+        <!-- Bar Chart -->
+        <div class="col-md-6 mb-4">
+            <h4>Statistik Kategori (Bar Chart)</h4>
+            <canvas id="barChart" width="400" height="400"></canvas>
+        </div>
+        <!-- Line Chart -->
+        <div class="col-12 mb-4">
+            <h4>Perubahan Pemasukan & Pengeluaran (Line Chart)</h4>
+            <canvas id="lineChart" width="400" height="400"></canvas>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Ambil data dari Flask template
+    const chartData = JSON.parse('{{ chart_data | tojson | safe }}');
+    const labels = Object.keys(chartData);
+    const data = Object.values(chartData);
+
+    // Pie Chart
+    const ctxPie = document.getElementById('pieChart').getContext('2d');
+    const pieChart = new Chart(ctxPie, {
+        type: 'pie',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Jumlah per Kategori',
+                data: data,
+                backgroundColor: [
+                    'rgba(75, 192, 192, 0.6)',
+                    'rgba(255, 99, 132, 0.6)',
+                    'rgba(255, 206, 86, 0.6)',
+                    'rgba(54, 162, 235, 0.6)',
+                    'rgba(153, 102, 255, 0.6)',
+                    'rgba(255, 159, 64, 0.6)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+        }
+    });
+
+    // Bar Chart
+    const ctxBar = document.getElementById('barChart').getContext('2d');
+    const barChart = new Chart(ctxBar, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Jumlah per Kategori',
+                data: data,
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Line Chart
+    const ctxLine = document.getElementById('lineChart').getContext('2d');
+    const lineChart = new Chart(ctxLine, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Pemasukan & Pengeluaran',
+                data: data,
+                fill: false,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+        }
+    });
+</script>
+{% endblock %}

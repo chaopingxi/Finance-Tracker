@@ -1,0 +1,61 @@
+{% extends 'layout.html' %}
+
+{% block title %}Tentang Kami - FinanceTracker{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="box-dark mb-4 p-4">
+        <h2 class="fw-bold text-primary">Tentang FinanceTracker</h2>
+        <p>FinanceTracker adalah aplikasi keuangan personal yang dirancang untuk membantu Anda mengelola
+            keuangan dengan lebih efektif dan terencana. Dengan antarmuka yang intuitif dan fitur yang komprehensif,
+            FinanceTracker memudahkan Anda untuk melacak pemasukan, mengontrol pengeluaran, dan mencapai tujuan keuangan
+            Anda.</p>
+
+        <h4 class="text-primary mt-4">🎯 Visi Kami</h4>
+        <p>Memberikan kemudahan akses terhadap manajemen keuangan personal yang efektif dan terjangkau bagi semua orang,
+            sehingga setiap individu dapat mengambil kendali penuh atas kesehatan finansialnya.</p>
+
+        <h4 class="text-primary mt-4">🔧 Fitur Utama</h4>
+        <div class="row row-cols-1 row-cols-md-2 g-4 mt-2">
+            {% set fitur = [
+            ('💰', 'Lacak Transaksi', 'Catat semua pemasukan dan pengeluaran dengan mudah dan terorganisir berdasarkan
+            kategori.'),
+            ('📊', 'Analisis Visual', 'Dapatkan insight melalui visualisasi grafik dan chart yang informatif tentang
+            pola keuangan Anda.'),
+            ('🗂️', 'Kategori Kustom', 'Buat dan kelola kategori transaksi sesuai dengan kebutuhan pengelolaan keuangan
+            Anda.'),
+            ('📱', 'Responsif', 'Akses aplikasi dari berbagai perangkat dengan tampilan yang selalu optimal.')
+            ] %}
+            {% for icon, title, desc in fitur %}
+            <div class="col">
+                <div class="card h-100 box-dark">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ icon }} {{ title }}</h5>
+                        <p class="card-text">{{ desc }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <h4 class="text-primary mt-5">🔒 Keamanan</h4>
+        <p>Kami mengutamakan keamanan data keuangan Anda. FinanceTracker menggunakan enkripsi tingkat tinggi dan
+            praktek keamanan terbaik untuk memastikan informasi keuangan Anda tetap aman dan terlindungi.</p>
+
+        <h4 class="text-primary mt-4">📞 Dukungan</h4>
+        <p>Butuh bantuan? Tim dukungan kami siap membantu. Hubungi kami melalui
+            <a href="mailto:support@financetracker.com">support@financetracker.com</a> atau
+            kunjungi halaman <a href="#">Pusat Bantuan</a>.
+        </p>
+
+        <div class="mt-4 small" style="opacity: 0.8;">
+            FinanceTracker v1.0.0 &copy; {{ current_year }}. Dibuat dengan ❤️ untuk membantu Anda mencapai kebebasan
+            finansial.
+        </div>
+    </div>
+
+    <div class="text-center mt-3">
+        <a href="{{ url_for('home') }}" class="btn btn-outline-secondary">&larr; Kembali ke Dashboard</a>
+    </div>
+</div>
+{% endblock %}

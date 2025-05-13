@@ -1,0 +1,481 @@
+{% extends 'layout.html' %}
+
+{% block title %}Home - FinanceTracker{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4">Halo, {{ user.name if user else 'User' }} 👋</h2>
+
+    <!-- Tambah Kategori -->
+    <div class="box-dark mb-4">
+        <div class="mb-2 fw-semibold fs-5">➕ Tambah Kategori</div>
+        <form method="POST" action="{{ url_for('add_category') }}">
+            <div class="row g-3">
+                <div class="col-md-5">
+                    <input type="text" name="category_name" placeholder="Nama Kategori" required class="form-control">
+                </div>
+                <div class="col-md-4">
+                    <select name="category_type" required class="form-select">
+                        <option disabled selected value="">Pilih tipe</option>
+                        <option value="income">Pemasukan</option>
+                        <option value="expense">Pengeluaran</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <input type="number" step="0.01" name="budget_limit" placeholder="Batas Anggaran (opsional)"
+                        class="form-control">
+                </div>
+                <div class="col-12 col-md-12 text-end">
+                    <button type="submit" class="btn btn-primary">Tambah</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+    <!-- Tambah Transaksi -->
+    <div class="box-dark mb-4">
+        <div class="mb-2 fw-semibold fs-5">💸 Tambah Transaksi</div>
+        <form method="POST" action="{{ url_for('add_transaction') }}" id="transaction-form">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <input type="number" step="0.01" name="amount" placeholder="Jumlah" required class="form-control">
+                </div>
+                <div class="col-md-3">
+                    <select name="transaction_type" required class="form-select">
+                        <option disabled selected value="">Pilih tipe</option>
+                        <option value="income">Pemasukan</option>
+                        <option value="expense">Pengeluaran</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select name="category_id" required class="form-select">
+                        <option disabled selected value="">Pilih kategori</option>
+                        {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category.name }} ({{ category.category_type }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <input type="text" name="note" placeholder="Catatan (opsional)" class="form-control">
+                </div>
+            </div>
+            <div class="text-end mt-3">
+                <button type="submit" class="btn btn-success">Tambah Transaksi</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Ringkasan (dengan kontras yang ditingkatkan) -->
+    <div class="row mb-4">
+        <!-- Total Saldo -->
+        <div class="col-md-4 mb-3">
+            <div class="summary-card enhanced-card">
+                <div class="enhanced-header">
+                    <div class="icon-circle bg-primary-light">
+                        <div class="fs-2">💰</div>
+                    </div>
+                    <div class="summary-label fw-bold text-white">Total Saldo</div>
+                </div>
+                <div class="enhanced-amount text-primary-bright fw-bold">
+                    Rp {{ "{:,.2f}".format(total_balance) }}
+                </div>
+                <div class="enhanced-details">
+                    <div class="text-bright-muted mb-2">Update terakhir: Hari ini</div>
+                    {% if total_income > 0 and total_expense > 0 %}
+                    <div class="progress" style="height: 8px; background-color: rgba(255,255,255,0.1);">
+                        <div class="progress-bar bg-success"
+                            style="width: {{ (total_income / (total_income + total_expense) * 100)|round }}%"></div>
+                        <div class="progress-bar bg-danger"
+                            style="width: {{ (total_expense / (total_income + total_expense) * 100)|round }}%"></div>
+                    </div>
+                    <div class="d-flex justify-content-between mt-2">
+                        <span class="text-success-bright fw-bold">{{ (total_income / (total_income + total_expense) *
+                            100)|round|int }}% Pemasukan</span>
+                        <span class="text-danger-bright fw-bold">{{ (total_expense / (total_income + total_expense) *
+                            100)|round|int }}% Pengeluaran</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Pemasukan -->
+        <div class="col-md-4 mb-3">
+            <div class="summary-card enhanced-card">
+                <div class="enhanced-header">
+                    <div class="icon-circle bg-success-light">
+                        <div class="fs-2">📈</div>
+                    </div>
+                    <div class="summary-label fw-bold text-white">Total Pemasukan</div>
+                </div>
+                <div class="enhanced-amount text-success-bright fw-bold">
+                    Rp {{ "{:,.2f}".format(total_income) }}
+                </div>
+                <div class="enhanced-details">
+                    <div class="text-bright-muted d-flex align-items-center">
+                        <span class="me-2">Bulan ini</span>
+                        {% if total_income > 0 and total_balance > 0 %}
+                        <span class="badge bg-success-bright">
+                            <i class="fas fa-arrow-up me-1"></i>
+                            {{ (total_income / total_balance * 100)|round|int }}% dari total
+                        </span>
+                        {% endif %}
+                    </div>
+                    {% if total_income > 0 %}
+                    <div class="mt-3 text-white">
+                        <i class="fas fa-chart-pie me-1"></i>
+                        Kategori teratas
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Pengeluaran -->
+        <div class="col-md-4 mb-3">
+            <div class="summary-card enhanced-card">
+                <div class="enhanced-header">
+                    <div class="icon-circle bg-danger-light">
+                        <div class="fs-2">📉</div>
+                    </div>
+                    <div class="summary-label fw-bold text-white">Total Pengeluaran</div>
+                </div>
+                <div class="enhanced-amount text-danger-bright fw-bold">
+                    Rp {{ "{:,.2f}".format(total_expense) }}
+                </div>
+                <div class="enhanced-details">
+                    <div class="text-bright-muted d-flex align-items-center">
+                        <span class="me-2">Bulan ini</span>
+                        {% if total_expense > 0 and total_balance > 0 %}
+                        <span class="badge bg-danger-bright">
+                            <i class="fas fa-arrow-up me-1"></i>
+                            {{ (total_expense / total_balance * 100)|round|int }}% dari total
+                        </span>
+                        {% else %}
+                        <span class="badge bg-success-bright">
+                            <i class="fas fa-check-circle me-1"></i>
+                            Belum ada pengeluaran
+                        </span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pencarian dan Export -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <form method="GET" action="{{ url_for('home') }}" class="flex-grow-1 me-2">
+            <div class="input-group">
+                <input type="text" name="q" value="{{ search_query if search_query else '' }}"
+                    placeholder="Cari transaksi..." class="form-control">
+                <button type="submit" class="btn btn-outline-secondary">Cari</button>
+            </div>
+        </form>
+        <a href="{{ url_for('export_csv') }}" class="btn btn-outline-success">Export CSV</a>
+    </div>
+
+    <!-- Daftar Transaksi with fixed alignment -->
+    <div class="box-dark mt-4 mb-4">
+        <div class="category-header">
+            <span class="folder-icon">💸</span> Daftar Transaksi
+        </div>
+        <div class="table-responsive">
+            <table class="table table-themed">
+                <thead>
+                    <tr>
+                        <th>Jumlah</th>
+                        <th>Tipe</th>
+                        <th>Kategori</th>
+                        <th>Catatan</th>
+                        <th class="text-center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for transaction in transactions %}
+                    <tr>
+                        <td>Rp {{ "{:,.2f}".format(transaction.amount) }}</td>
+                        <td>
+                            {% if transaction.transaction_type == 'income' %}
+                            <span class="tipe-badge tipe-pemasukan">Pemasukan</span>
+                            {% else %}
+                            <span class="tipe-badge tipe-pengeluaran">Pengeluaran</span>
+                            {% endif %}
+                        </td>
+                        <td class="kategori-kolom">{{ transaction.category.name }}</td>
+                        <td>{{ transaction.note }}</td>
+                        <td class="text-center">
+                            <div class="d-flex justify-content-center gap-2">
+                                <a href="{{ url_for('edit_transaction', id=transaction.id) }}"
+                                    class="btn btn-sm btn-warning">
+                                    Edit
+                                </a>
+                                <button type="button" class="btn btn-sm btn-danger delete-transaction-btn"
+                                    data-id="{{ transaction.id }}" data-note="{{ transaction.note }}">
+                                    Hapus
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center">Belum ada transaksi.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Daftar Kategori with fixed alignment -->
+    <div class="box-dark mt-4">
+        <div class="category-header">
+            <span class="folder-icon">📂</span> Daftar Kategori
+        </div>
+        <div class="table-responsive">
+            <table class="table table-themed">
+                <thead>
+                    <tr>
+                        <th>Nama Kategori</th>
+                        <th>Tipe</th>
+                        <th>Anggaran</th> <!-- Kolom baru -->
+                        <th class="text-center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for category in categories %}
+                    <tr>
+                        <td class="kategori-kolom">{{ category.name }}</td>
+                        <td>
+                            {% if category.category_type == 'income' %}
+                            <span class="tipe-badge tipe-pemasukan">Pemasukan</span>
+                            {% else %}
+                            <span class="tipe-badge tipe-pengeluaran">Pengeluaran</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if category.category_type == 'expense' and category.budget_limit > 0 %}
+                            {% set used = category.transactions | selectattr("transaction_type", "equalto", "expense") |
+                            map(attribute='amount') | sum %}
+                            <div class="progress" style="height: 8px; background-color: rgba(255,255,255,0.1);">
+                                <div class="progress-bar {% if used > category.budget_limit %}bg-danger{% else %}bg-success{% endif %}"
+                                    style="width: {{ (used / category.budget_limit * 100)|round(0, 'floor') }}%">
+                                </div>
+                            </div>
+                            <small class="text-muted">{{ used|currency }} / {{ category.budget_limit|currency }}</small>
+                            {% if used > category.budget_limit %}
+                            <span class="badge bg-danger mt-1">⚠️ Melebihi anggaran!</span>
+                            {% endif %}
+                            {% else %}
+                            -
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            <div class="d-flex justify-content-center gap-2">
+                                <a href="{{ url_for('edit_category', id=category.id) }}"
+                                    class="btn btn-sm btn-warning">Edit</a>
+                                <button type="button" class="btn btn-sm btn-danger delete-category-btn"
+                                    data-id="{{ category.id }}" data-name="{{ category.name }}">
+                                    Hapus
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center">Belum ada kategori.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Form untuk mengirim request DELETE -->
+    <form id="delete-transaction-form" method="POST" style="display: none;">
+        <input type="hidden" name="_method" value="DELETE">
+    </form>
+    <form id="delete-category-form" method="POST" style="display: none;">
+        <input type="hidden" name="_method" value="DELETE">
+    </form>
+
+    <!-- Pastikan SweetAlert2 diinclude di layout.html -->
+    <!-- Jika SweetAlert2 belum diinclude, tambahkan di sini -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- JavaScript untuk konfirmasi hapus dan edit -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Fungsi untuk konfirmasi hapus transaksi
+            const deleteTransactionButtons = document.querySelectorAll('.delete-transaction-btn');
+            deleteTransactionButtons.forEach(button => {
+                button.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const transactionId = this.getAttribute('data-id');
+                    const transactionNote = this.getAttribute('data-note') || '';
+
+                    // Deteksi mode tema (light/dark)
+                    const isDarkMode = document.body.classList.contains('dark-mode');
+
+                    Swal.fire({
+                        title: 'Yakin hapus transaksi?',
+                        text: transactionNote ? `Catatan: "${transactionNote}"` : "Transaksi ini akan dihapus permanen.",
+                        icon: 'warning',
+                        iconColor: isDarkMode ? '#f87171' : '#dc2626',
+                        showCancelButton: true,
+                        confirmButtonColor: '#ef4444',
+                        cancelButtonColor: '#4b5563',
+                        confirmButtonText: 'Hapus Transaksi',
+                        cancelButtonText: 'Batal',
+                        background: isDarkMode ? '#1a222e' : '#ffffff',
+                        color: isDarkMode ? '#ffffff' : '#333333',
+                        backdrop: `rgba(0,0,0,0.4)`,
+                        allowOutsideClick: false
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Gunakan form untuk mengirim request POST dengan parameter _method=DELETE
+                            const form = document.getElementById('delete-transaction-form');
+                            form.action = `/delete_transaction/${transactionId}`;
+                            form.submit();
+                        }
+                    });
+                });
+            });
+
+            // Fungsi untuk konfirmasi hapus kategori
+            const deleteCategoryButtons = document.querySelectorAll('.delete-category-btn');
+            deleteCategoryButtons.forEach(button => {
+                button.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const categoryId = this.getAttribute('data-id');
+                    const categoryName = this.getAttribute('data-name') || '';
+
+                    // Deteksi mode tema (light/dark)
+                    const isDarkMode = document.body.classList.contains('dark-mode');
+
+                    Swal.fire({
+                        title: 'Apakah Anda yakin?',
+                        text: categoryName ? `Kategori "${categoryName}" akan dihapus permanen.` : "Kategori ini akan dihapus permanen. Tindakan ini tidak bisa dibatalkan.",
+                        icon: 'warning',
+                        iconColor: isDarkMode ? '#f87171' : '#dc2626',
+                        showCancelButton: true,
+                        confirmButtonColor: '#ef4444',
+                        cancelButtonColor: '#4b5563',
+                        confirmButtonText: 'Hapus Kategori',
+                        cancelButtonText: 'Batal',
+                        background: isDarkMode ? '#1a222e' : '#ffffff',
+                        color: isDarkMode ? '#ffffff' : '#333333',
+                        backdrop: `rgba(0,0,0,0.4)`,
+                        allowOutsideClick: false
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Gunakan form untuk mengirim request POST dengan parameter _method=DELETE
+                            const form = document.getElementById('delete-category-form');
+                            form.action = `/delete_category/${categoryId}`;
+                            form.submit();
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+
+    {% endblock %}
+
+    {% block extra_js %}
+    <script>
+        // Function to show toast notifications
+        function showToast(message, type) {
+            // You can use any toast library like Toastify, SweetAlert, etc.
+            if (window.Toastify) {
+                Toastify({
+                    text: message,
+                    duration: 3000,
+                    close: true,
+                    gravity: "top",
+                    position: "right",
+                    backgroundColor: type === 'success' ? "#4caf50" :
+                        type === 'warning' ? "#ff9800" :
+                            type === 'error' ? "#f44336" : "#2196f3"
+                }).showToast();
+            } else if (window.Swal) {
+                Swal.fire({
+                    title: message,
+                    icon: type,
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+            } else {
+                alert(message);
+            }
+        }
+
+        // API handler if not defined elsewhere
+        const api = api || {
+            post: function (url, data) {
+                return fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                    },
+                    body: JSON.stringify(data)
+                })
+                    .then(response => response.json());
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Get the transaction form reliably
+            const form = document.getElementById('transaction-form');
+
+            if (form) {
+                form.addEventListener('submit', function (e) {
+                    e.preventDefault();
+
+                    // Get form fields directly from the form element
+                    const amount = form.querySelector('input[name="amount"]').value.trim();
+                    const type = form.querySelector('select[name="transaction_type"]').value;
+                    const category = form.querySelector('select[name="category_id"]').value;
+                    const notes = form.querySelector('input[name="note"]').value.trim();
+
+                    // Check if required fields are filled
+                    if (!amount || !type || !category) {
+                        showToast('Harap isi semua field yang diperlukan', 'warning');
+                        return;
+                    }
+
+                    // Submit the form data
+                    api.post('/api/add_transaction', {
+                        amount: amount,
+                        type: type,
+                        category: category,
+                        notes: notes
+                    })
+                        .then(response => {
+                            if (response.success) {
+                                showToast('Transaksi berhasil ditambahkan', 'success');
+                                // Clear form fields
+                                form.querySelector('input[name="amount"]').value = '';
+                                form.querySelector('input[name="note"]').value = '';
+                                // Refresh page or update transactions display
+                                window.location.reload();
+                            } else {
+                                showToast(response.message || 'Gagal menambahkan transaksi', 'error');
+                            }
+                        })
+                        .catch(error => {
+                            showToast('Terjadi kesalahan', 'error');
+                            console.error(error);
+                        });
+                });
+            }
+        });
+        window.addEventListener('load', function () {
+            hideLoading();  // memastikan spinner hilang jika masih muncul
+        });
+    </script>
+    {% endblock %}

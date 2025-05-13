@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        (function () {
+            const savedTheme = localStorage.getItem("theme") || "light-mode";
+            document.documentElement.classList.add(savedTheme);
+
+            const styleEl = document.createElement('style');
+            if (savedTheme === "dark-mode") {
+                styleEl.textContent = `
+                    body, .container, .box-dark, .summary-card, .table-themed, .card, .table, .navbar {
+                        transition: none !important;
+                    }
+                    body { background: linear-gradient(135deg, #121212, #1a1a2e) !important; color: #f8f9fa !important; }
+                    .box-dark, .card, .table-themed { background-color: rgba(30, 30, 30, 0.9) !important; }
+                `;
+            } else {
+                styleEl.textContent = `
+                    body, .container, .box-dark, .summary-card, .table-themed, .card, .table, .navbar {
+                        transition: none !important;
+                    }
+                    body { background: linear-gradient(135deg, #f8f9fa, #e3f2fd) !important; color: #212529 !important; }
+                    .box-dark, .card, .table-themed { background-color: rgba(255, 255, 255, 0.9) !important; }
+                `;
+            }
+            document.head.appendChild(styleEl);
+            window.addEventListener('load', function () {
+                setTimeout(function () {
+                    styleEl.remove();
+                }, 50);
+            });
+        })();
+    </script>
+
+    <title>{% block title %}FinanceTracker{% endblock %}</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.8/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/darkmode.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        body.light-mode {
+            background: linear-gradient(135deg, #f8f9fa, #e3f2fd);
+            background-attachment: fixed;
+            background-size: cover;
+            color: #212529;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        body.dark-mode {
+            background: linear-gradient(135deg, #121212, #1a1a2e);
+            background-attachment: fixed;
+            background-size: cover;
+            color: #f8f9fa;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .card {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 1rem;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        body.dark-mode .card {
+            background-color: rgba(30, 30, 30, 0.9);
+        }
+
+        #logo-img {
+            width: 40px;
+            height: 40px;
+            animation: popIn 0.6s ease-out;
+            transition: transform 0.3s ease;
+        }
+
+        #logo-img:hover {
+            transform: scale(1.1);
+        }
+
+        #profile-img {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid transparent;
+            transition: border-color 0.3s ease;
+        }
+
+        #profile-img:hover {
+            border-color: var(--bs-primary);
+        }
+
+        .navbar {
+            background-color: transparent !important;
+            backdrop-filter: blur(10px);
+            transition: padding 0.3s ease;
+        }
+
+        .navbar-brand {
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-brand:hover {
+            color: var(--bs-primary) !important;
+        }
+
+        .dropdown-menu {
+            background-color: var(--bs-light);
+            border-radius: 0.8rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: none;
+            padding: 0.5rem;
+        }
+
+        .dropdown-item {
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+            transition: background-color 0.2s ease;
+        }
+
+        body.dark-mode .dropdown-menu {
+            background-color: #222;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark-mode .dropdown-item {
+            color: #f8f9fa;
+        }
+
+        body.dark-mode .dropdown-item:hover {
+            background-color: #333;
+        }
+
+        .btn {
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        #toggle-theme {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .alert {
+            border-radius: 0.8rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* Toast notification */
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1060;
+        }
+
+        .toast {
+            border-radius: 0.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        body.dark-mode .toast {
+            background-color: #222;
+            color: #f8f9fa;
+        }
+
+        /* Loading animation */
+        .spinner-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .spinner-overlay.show {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .spinner-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark-mode .spinner-container {
+            background-color: #222;
+            color: #f8f9fa;
+        }
+
+        /* Back to top button */
+        #back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--bs-primary);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        #back-to-top.visible {
+            opacity: 1;
+        }
+
+        #back-to-top:hover {
+            transform: translateY(-5px);
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0.5rem 1rem;
+            }
+
+            .container {
+                padding-left: 1.5rem;
+                padding-right: 1.5rem;
+            }
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<!-- SEO & Social -->
+<meta name="description" content="FinanceTracker - Aplikasi pengatur keuangan pribadi modern">
+<meta name="keywords" content="keuangan, finance, budgeting, tracker, AI, gratis">
+<meta property="og:title" content="FinanceTracker">
+<meta property="og:description" content="Kelola keuanganmu dengan mudah dan pintar.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="{{ url_for('static', filename='images/logo-light.png') }}">
+<link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+
+<body>
+    <!-- Loading Spinner -->
+    <div class="spinner-overlay" id="loading-spinner">
+        <div class="spinner-container">
+            <div class="spinner-border text-primary mb-3" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mb-0">Loading, please wait...</p>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg shadow-sm sticky-top">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="{{ url_for('home') }}">
+                <img id="logo-img" src="{{ url_for('static', filename='images/logo-light.png') }}" alt="Logo">
+                <span class="fs-5">FinanceTracker</span>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('home') }}">Dashboard</a>
+                    </li>
+                    {% if current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('charts') }}">Analytics</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('transactions') }}">Transactions</a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('about') }}">About</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="d-flex align-items-center gap-3 ms-3">
+                <button id="toggle-theme" class="btn btn-sm btn-outline-secondary" onclick="toggleTheme()"
+                    title="Toggle Theme">
+                    <span id="theme-icon">🌙</span>
+                </button>
+
+                {% if current_user.is_authenticated %}
+                <div class="dropdown">
+                    <a class="dropdown-toggle d-flex align-items-center text-decoration-none" href="#" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <img id="profile-img" src="{{ url_for('static', filename='images/profile.png') }}"
+                            alt="Profile">
+                            {% if current_user.is_authenticated and current_user.subscription_level %}
+                            <span class="badge bg-success ms-2">
+                                {{ current_user.subscription_level.replace('_', ' ').title() }}
+                            </span>
+                        {% endif %}
+                        
+
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end mt-2 shadow-sm">
+                        <li><a class="dropdown-item" href="{{ url_for('profile') }}"><i
+                                    class="fas fa-user-circle me-2"></i>Profile</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('settings') }}"><i
+                                    class="fas fa-cog me-2"></i>Settings</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('charts') }}"><i
+                                    class="fas fa-chart-line me-2"></i>Charts</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('premium') }}"><i
+                                    class="fas fa-crown me-2"></i>Premium</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('ultra_premium') }}"><i
+                                    class="fas fa-star me-2"></i>Ultra Premium</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item text-danger" href="{{ url_for('logout') }}"><i
+                                    class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                    </ul>
+                </div>
+                {% else %}
+                <a class="btn btn-outline-primary btn-sm" href="{{ url_for('login') }}"><i
+                        class="fas fa-sign-in-alt me-1"></i> Login</a>
+                <a class="btn btn-primary btn-sm ms-2" href="{{ url_for('register') }}"><i
+                        class="fas fa-user-plus me-1"></i> Register</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            {% for category, message in messages %}
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: '{{ category }}',
+                title: '{{ message }}',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                background: document.body.classList.contains('dark-mode') ? '#1a1a2e' : '#fff',
+                color: document.body.classList.contains('dark-mode') ? '#fff' : '#000'
+            });
+            {% endfor %}
+        });
+    </script>
+    {% endif %}
+    {% endwith %}
+
+
+    {% block content %}{% endblock %}
+    </div>
+
+    <!-- Back to top button -->
+    <div id="back-to-top" title="Back to top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <!-- Toast container -->
+    <div class="toast-container"></div>
+
+    <footer class="mt-5 py-4 text-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <p class="mb-1">&copy; {{ current_date.strftime('%Y') }} FinanceTracker. All rights reserved.</p>
+                    <div class="d-flex justify-content-center gap-3 mt-2">
+                        <a href="#" class="text-decoration-none">Terms</a>
+                        <a href="#" class="text-decoration-none">Privacy</a>
+                        <a href="#" class="text-decoration-none">Support</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.8/dist/sweetalert2.all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        function updateThemeIcon() {
+            const icon = document.getElementById("theme-icon");
+            icon.textContent = document.body.classList.contains("dark-mode") ? "🌞" : "🌙";
+        }
+
+        function updateLogo(theme) {
+            const logo = document.getElementById("logo-img");
+            if (theme === "dark-mode") {
+                logo.src = "{{ url_for('static', filename='images/logo-dark.png') }}";
+            } else {
+                logo.src = "{{ url_for('static', filename='images/logo-light.png') }}";
+            }
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const newTheme = body.classList.contains("light-mode") ? "dark-mode" : "light-mode";
+            body.classList.remove("light-mode", "dark-mode");
+            body.classList.add(newTheme);
+            localStorage.setItem("theme", newTheme);
+            updateThemeIcon();
+            updateLogo(newTheme);
+        }
+
+        function showToast(message, type = 'info') {
+            const toastContainer = document.querySelector('.toast-container');
+            const iconClass = type === 'success' ? 'fa-check-circle' :
+                type === 'error' ? 'fa-exclamation-circle' :
+                    type === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle';
+
+            const toastHTML = `
+                <div class="toast align-items-center text-white bg-${type === 'error' ? 'danger' : type} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <i class="fas ${iconClass} me-2"></i> ${message}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            `;
+
+            toastContainer.insertAdjacentHTML('beforeend', toastHTML);
+            const toastElement = toastContainer.lastElementChild;
+            const toast = new bootstrap.Toast(toastElement, { delay: 5000 });
+            toast.show();
+
+            toastElement.addEventListener('hidden.bs.toast', function () {
+                toastElement.remove();
+            });
+        }
+
+        function showLoading() {
+            document.getElementById('loading-spinner').classList.add('show');
+        }
+
+        function hideLoading() {
+            document.getElementById('loading-spinner').classList.remove('show');
+        }
+
+        // Form submission with loading spinner
+        document.addEventListener('submit', function (e) {
+            const form = e.target;
+            if (form.getAttribute('data-loading') === 'true') {
+                showLoading();
+            }
+        });
+
+        // Back to top button functionality
+        window.addEventListener('scroll', function () {
+            const backToTopButton = document.getElementById('back-to-top');
+            if (window.scrollY > 300) {
+                backToTopButton.classList.add('visible');
+            } else {
+                backToTopButton.classList.remove('visible');
+            }
+        });
+
+        document.getElementById('back-to-top').addEventListener('click', function () {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Helper functions for API calls
+        window.api = {
+            get: async function (url) {
+                showLoading();
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return await response.json();
+                } catch (error) {
+                    console.error('Error:', error);
+                    showToast('An error occurred while fetching data', 'error');
+                    throw error;
+                } finally {
+                    hideLoading();
+                }
+            },
+            post: async function (url, data) {
+                showLoading();
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+                        },
+                        body: JSON.stringify(data)
+                    });
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return await response.json();
+                } catch (error) {
+                    console.error('Error:', error);
+                    showToast('An error occurred while submitting data', 'error');
+                    throw error;
+                } finally {
+                    hideLoading();
+                }
+            }
+        };
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const savedTheme = localStorage.getItem("theme") || "light-mode";
+            document.body.classList.add(savedTheme);
+            updateThemeIcon();
+            updateLogo(savedTheme);
+
+            // Initialize tooltips
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        });
+
+        // Add this to layout.html in a <script> tag
+        const api = {
+            post: function (url, data) {
+                return fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify(data)
+                })
+                    .then(response => response.json());
+            }
+        };
+
+        function showToast(message, type) {
+            // You can use SweetAlert2 here since you already have it
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: type,
+                title: message,
+                showConfirmButton: false,
+                timer: 3000
+            });
+        }
+
+
+        window.addEventListener("beforeunload", () => {
+            document.getElementById("loading-spinner").style.display = "flex";
+        });
+        window.addEventListener('load', () => {
+            document.body.classList.add('loaded');
+        });
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+
+            const btn = document.createElement('button');
+            btn.textContent = "📲 Install App";
+            btn.className = "btn btn-warning position-fixed bottom-0 end-0 m-4";
+            btn.onclick = () => {
+                deferredPrompt.prompt();
+            };
+            document.body.appendChild(btn);
+            hideLoading();
+        });
+    </script>
+
+    {% block extra_js %}{% endblock %}
+
+</body>
+
+</html>

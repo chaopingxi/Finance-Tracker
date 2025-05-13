@@ -1,0 +1,35 @@
+<!-- partials/footer.html -->
+<footer class="bg-light py-4 mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <h5>FinanceTracker</h5>
+                <p class="text-muted">Track your finances with ease.</p>
+            </div>
+            <div class="col-md-3">
+                <h5>Links</h5>
+                <ul class="list-unstyled">
+                    <li><a href="{{ url_for('home') }}" class="text-decoration-none">Home</a></li>
+                    <li><a href="{{ url_for('about') }}" class="text-decoration-none">About</a></li>
+                    {% if current_user.is_authenticated %}
+                    <li><a href="{{ url_for('profile') }}" class="text-decoration-none">Profile</a></li>
+                    {% else %}
+                    <li><a href="{{ url_for('login') }}" class="text-decoration-none">Login</a></li>
+                    <li><a href="{{ url_for('register') }}" class="text-decoration-none">Register</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+            <div class="col-md-3">
+                <h5>Contact</h5>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-envelope me-2"></i>info@financetracker.com</li>
+                    <li><i class="fas fa-phone me-2"></i>+1 (123) 456-7890</li>
+                </ul>
+            </div>
+        </div>
+        <hr>
+        <div class="text-center">
+            <p class="mb-0">&copy; {{ current_year }} FinanceTracker. All rights reserved.</p>
+        </div>
+    </div>
+</footer>

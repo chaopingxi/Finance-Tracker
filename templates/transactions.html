@@ -1,0 +1,103 @@
+{% extends 'layout.html' %}
+
+{% block title %}Transaksi - FinanceTracker{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">💼 Daftar Transaksi</h2>
+        <a href="{{ url_for('home') }}" class="btn btn-outline-secondary">⬅ Kembali</a>
+    </div>
+
+    <!-- Filter & Sort -->
+    <form method="GET" class="row g-3 mb-4">
+        <div class="col-md-3">
+            <input type="text" name="q" value="{{ request.args.get('q', '') }}" class="form-control"
+                placeholder="Cari catatan...">
+        </div>
+        <div class="col-md-2">
+            <select name="type" class="form-select">
+                <option value="">Semua Tipe</option>
+                <option value="income" {% if request.args.get('type')=='income' %}selected{% endif %}>Pemasukan</option>
+                <option value="expense" {% if request.args.get('type')=='expense' %}selected{% endif %}>Pengeluaran
+                </option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <select name="category" class="form-select">
+                <option value="">Semua Kategori</option>
+                {% for category in categories %}
+                <option value="{{ category.id }}" {% if request.args.get('category')==category.id|string %}selected{%
+                    endif %}>
+                    {{ category.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <select name="sort" class="form-select">
+                <option value="date_desc" {% if request.args.get('sort')=='date_desc' %}selected{% endif %}>Terbaru
+                </option>
+                <option value="date_asc" {% if request.args.get('sort')=='date_asc' %}selected{% endif %}>Terlama
+                </option>
+                <option value="amount_desc" {% if request.args.get('sort')=='amount_desc' %}selected{% endif %}>Jumlah
+                    Tertinggi</option>
+                <option value="amount_asc" {% if request.args.get('sort')=='amount_asc' %}selected{% endif %}>Jumlah
+                    Terendah</option>
+            </select>
+        </div>
+        <div class="col-md-2 text-end">
+            <button class="btn btn-primary w-100">Terapkan</button>
+        </div>
+    </form>
+
+    <!-- Tabel Transaksi -->
+    <div class="box-dark">
+        <div class="table-responsive">
+            <table class="table table-themed">
+                <thead>
+                    <tr>
+                        <th>Tanggal</th>
+                        <th>Jumlah</th>
+                        <th>Tipe</th>
+                        <th>Kategori</th>
+                        <th>Catatan</th>
+                        <th class="text-center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for transaction in transactions %}
+                    <tr>
+                        <td>{{ transaction.date.strftime('%Y-%m-%d') }}</td>
+                        <td>Rp {{ "{:,.2f}".format(transaction.amount) }}</td>
+                        <td>
+                            {% if transaction.transaction_type == 'income' %}
+                            <span class="tipe-badge tipe-pemasukan">Pemasukan</span>
+                            {% else %}
+                            <span class="tipe-badge tipe-pengeluaran">Pengeluaran</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ transaction.category.name }}</td>
+                        <td>{{ transaction.note or '-' }}</td>
+                        <td class="text-center">
+                            <div class="d-flex justify-content-center gap-2">
+                                <a href="{{ url_for('edit_transaction', id=transaction.id) }}"
+                                    class="btn btn-sm btn-warning">Edit</a>
+                                <form action="{{ url_for('delete_transaction', id=transaction.id) }}" method="POST"
+                                    onsubmit="return confirm('Yakin ingin menghapus transaksi ini?');">
+                                    <button class="btn btn-sm btn-danger">Hapus</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center">Tidak ada transaksi ditemukan.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

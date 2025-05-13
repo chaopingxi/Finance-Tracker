@@ -1,0 +1,27 @@
+{% extends 'layout.html' %}
+
+{% block title %}Premium - FinanceTracker{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="text-center mb-4">
+        <h2 class="fw-bold">🌟 Langganan Premium</h2>
+        <p class="lead text-bright-muted">Nikmati fitur eksklusif untuk mengelola keuanganmu dengan lebih baik.</p>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="box-dark text-center">
+                <h4 class="fw-bold mb-3">Keuntungan Premium:</h4>
+                <ul class="list-group list-group-flush mb-4 text-start">
+                    <li class="list-group-item">✅ Ekspor laporan keuangan (CSV)</li>
+                    <li class="list-group-item">✅ Visualisasi grafik & analitik lengkap</li>
+                    <li class="list-group-item">✅ Dukungan prioritas</li>
+                </ul>
+                <form method="POST" action="{{ url_for('upgrade', level='premium') }}">
+                    <button type="submit" class="btn btn-success btn-lg">Upgrade ke Premium</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

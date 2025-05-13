@@ -1,0 +1,180 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<style>
+  body.light-mode {
+    background: linear-gradient(to right, #f0f4f8, #ffffff);
+    color: #333;
+  }
+
+  body.dark-mode {
+    background: linear-gradient(to right, #141e30, #243b55);
+    color: white;
+  }
+
+  .login-card {
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.6s ease forwards;
+  }
+
+  body.dark-mode .login-card {
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+  }
+
+  body.light-mode .login-card {
+    background: rgba(255, 255, 255, 0.85);
+    color: #333;
+  }
+
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .login-card input {
+    border: none;
+  }
+
+  body.dark-mode .login-card input {
+    background-color: #1c1c1e;
+    color: white;
+  }
+
+  body.dark-mode .login-card input::placeholder {
+    color: #aaa;
+  }
+
+  body.light-mode .login-card input {
+    background-color: #ffffff;
+    color: #000;
+  }
+
+  body.light-mode .login-card input::placeholder {
+    color: #666;
+  }
+
+  .quote {
+    font-size: 0.9rem;
+    font-style: italic;
+  }
+
+  body.dark-mode .quote {
+    color: #ccc;
+  }
+
+  body.light-mode .quote {
+    color: #555;
+  }
+
+  .toggle-password {
+    cursor: pointer;
+    position: absolute;
+    right: 15px;
+    top: 36px;
+  }
+
+  .position-relative {
+    position: relative;
+  }
+
+  .theme-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    border: none;
+    border-radius: 50%;
+    padding: 10px 12px;
+    background-color: #0d6efd;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+  }
+
+  /* Tambahan untuk subtitle */
+  .subtitle {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #6c757d;
+  }
+
+  body.dark-mode .subtitle {
+    color: #bbbbbb;
+  }
+</style>
+
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 90vh;">
+  <div class="enhanced-card p-4" style="width: 100%; max-width: 400px;">
+    <div class="text-center mb-4">
+      <h1 class="fw-bold text-info">💰 FinanceTracker</h1>
+      <p class="subtitle">Kelola keuanganmu dengan mudah</p>
+    </div>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="alert alert-danger" role="alert">
+      {{ messages[0] }}
+    </div>
+    {% endif %}
+    {% endwith %}
+    <form method="POST">
+      <div class="form-group mb-3">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" name="email" placeholder="Masukkan email" required>
+      </div>
+      <div class="form-group mb-3 position-relative">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" name="password" id="password" placeholder="Masukkan password"
+          required>
+        <span class="toggle-password" onclick="togglePassword()">👁️</span>
+      </div>
+      <div class="text-end mb-3">
+        <a href="{{ url_for('forgot_password') }}" class="text-decoration-none text-info">Lupa password?</a>
+      </div>
+      <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" name="remember" id="remember">
+        <label class="form-check-label" for="remember">Ingat saya</label>
+      </div>
+      <button type="submit" class="btn btn-primary w-100">Login</button>
+    </form>
+    <div class="text-center mt-3">
+      <small>Belum punya akun? <a href="{{ url_for('register') }}" class="text-info">Daftar di sini</a></small>
+    </div>
+    <p class="quote text-center mt-4">“Uang yang dikelola dengan baik, hidup jadi lebih santai.” 💡</p>
+  </div>
+
+  <!-- Tombol toggle mode -->
+  <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+
+  <script>
+    function togglePassword() {
+      const input = document.getElementById("password");
+      input.type = input.type === "password" ? "text" : "password";
+    }
+
+    function toggleTheme() {
+      const body = document.body;
+      if (body.classList.contains("light-mode")) {
+        body.classList.remove("light-mode");
+        body.classList.add("dark-mode");
+        localStorage.setItem("theme", "dark-mode");
+      } else {
+        body.classList.remove("dark-mode");
+        body.classList.add("light-mode");
+        localStorage.setItem("theme", "light-mode");
+      }
+    }
+
+    // Aktifkan tema yang terakhir disimpan
+    document.addEventListener("DOMContentLoaded", function () {
+      const savedTheme = localStorage.getItem("theme") || "dark-mode";
+      document.body.classList.add(savedTheme);
+    });
+  </script>
+  {% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'layout.html' %}
+
+{% block title %}Ultra Premium - FinanceTracker{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="text-center mb-4">
+        <h2 class="fw-bold text-warning">👑 Ultra Premium</h2>
+        <p class="lead text-bright-muted">Solusi lengkap untuk pengguna profesional dan bisnis kecil.</p>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="box-dark text-center">
+                <h4 class="fw-bold mb-3">Keuntungan Ultra Premium:</h4>
+                <ul class="list-group list-group-flush mb-4 text-start">
+                    <li class="list-group-item">🚀 Semua fitur Premium</li>
+                    <li class="list-group-item">📊 Laporan bulanan otomatis via email</li>
+                    <li class="list-group-item">🔐 Enkripsi data tingkat lanjut</li>
+                    <li class="list-group-item">💼 Dukungan langsung 24/7</li>
+                </ul>
+                <form method="POST" action="{{ url_for('upgrade', level='ultra_premium') }}">
+                    <button type="submit" class="btn btn-warning btn-lg text-dark">Upgrade ke Ultra Premium</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

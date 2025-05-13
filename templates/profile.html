@@ -1,0 +1,104 @@
+{% extends 'layout.html' %}
+
+{% block title %}Profile - FinanceTracker{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4">👤 Profil Saya</h2>
+
+    <div class="row">
+        <!-- Kartu Profile -->
+        <div class="col-md-4 mb-4">
+            <div class="box-dark text-center p-4">
+                <img src="{{ url_for('static', filename='uploads/' + (user.profile_image if user.profile_image else 'default.png')) }}"
+                    alt="Foto Profil" class="rounded-circle mb-3"
+                    style="width:120px; height:120px; object-fit:cover; border: 3px solid #4b5563;">
+
+                <h4 class="fw-bold mb-1">{{ user.name }}</h4>
+                <p class="text-bright-muted mb-1">{{ user.email }}</p>
+                <span class="badge bg-success-bright">{{ user.subscription_level|capitalize }} Member</span>
+
+                <div class="mt-4">
+                    <a href="{{ url_for('edit_profile') }}" class="btn btn-primary btn-sm w-100 mb-2">
+                        <i class="fas fa-edit me-2"></i>Edit Profil
+                    </a>
+                    <a href="{{ url_for('settings') }}" class="btn btn-outline-secondary btn-sm w-100">
+                        <i class="fas fa-cog me-2"></i>Pengaturan
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistik -->
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="enhanced-card text-center">
+                        <div class="enhanced-header">
+                            <div class="icon-circle bg-primary-light">
+                                <div class="fs-2">💸</div>
+                            </div>
+                            <div class="fw-bold text-white">Jumlah Transaksi</div>
+                        </div>
+                        <div class="enhanced-amount text-primary-bright">{{ transaction_count }}</div>
+                        <div class="enhanced-details">Total transaksi yang telah Anda buat.</div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <div class="enhanced-card text-center">
+                        <div class="enhanced-header">
+                            <div class="icon-circle bg-success-light">
+                                <div class="fs-2">📂</div>
+                            </div>
+                            <div class="fw-bold text-white">Jumlah Kategori</div>
+                        </div>
+                        <div class="enhanced-amount text-success-bright">{{ category_count }}</div>
+                        <div class="enhanced-details">Kategori yang Anda kelola.</div>
+                    </div>
+                </div>
+
+                <div class="col-md-12 mb-4">
+                    <div class="enhanced-card text-center">
+                        <div class="enhanced-header">
+                            <div class="icon-circle bg-success-light">
+                                <div class="fs-2">💰</div>
+                            </div>
+                            <div class="fw-bold text-white">Tabungan Anda</div>
+                        </div>
+                        <div class="enhanced-amount text-success-bright">Rp {{ "{:,.2f}".format(savings) }}</div>
+                        <div class="enhanced-details">Total saldo bersih Anda saat ini.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aktivitas Terbaru -->
+            <div class="box-dark p-4">
+                <h5 class="fw-bold mb-3">📋 Aktivitas Terbaru</h5>
+                {% if recent_transactions %}
+                <ul class="list-group">
+                    {% for transaction in recent_transactions %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="fw-bold">{{ transaction.note if transaction.note else 'Tanpa Catatan' }}</div>
+                            <small class="text-bright-muted">{{ transaction.date.strftime('%d %B %Y %H:%M') }}</small>
+                        </div>
+                        <span
+                            class="badge {% if transaction.transaction_type == 'income' %}bg-success-bright{% else %}bg-danger-bright{% endif %}">
+                            {% if transaction.transaction_type == 'income' %}
+                            +Rp {{ "{:,.2f}".format(transaction.amount) }}
+                            {% else %}
+                            -Rp {{ "{:,.2f}".format(transaction.amount) }}
+                            {% endif %}
+                        </span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="text-bright-muted text-center">Belum ada aktivitas terbaru.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
